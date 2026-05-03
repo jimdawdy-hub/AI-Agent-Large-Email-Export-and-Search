@@ -1,6 +1,11 @@
 # AI Agent Large Email Export and Search
 
 A complete pipeline for exporting large email archives (100K+ messages) from Yahoo Mail and performing AI-powered triage using local LLMs.
+Utilizes an AI agent such as Openclaw or Hermes to manage the process of downloading massive (100k+) email storage, sorting them emails,
+and delivering a curated list of high value emails for later archiving.
+
+This method uses a cheap GPU and Ollama local model to do the AI-review without burning expensive cloud tokens.  Should work similarly for
+Gmail and other clouod email systems.
 
 ## Overview
 
