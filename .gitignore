@@ -1,0 +1,37 @@
+# Credentials
+*.json
+!package.json
+!package-lock.json
+config/
+credentials/
+
+# Downloaded emails (large)
+*.eml
+eml/
+email-data/
+
+# Database files
+*.db
+*.db-journal
+vectors/
+
+# Logs
+*.log
+logs/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+env/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temp files
+*.tmp
+*.swp
+*~
