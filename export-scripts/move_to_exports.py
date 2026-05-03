@@ -6,7 +6,8 @@ Always moves seq 1:N (the first N messages) since they shift after each MOVE.
 import imaplib, re, time, sys
 
 HOST = "imap.mail.yahoo.com"
-EMAIL = "kc7rcy@yahoo.com"
+# EDIT THIS: Your Yahoo Mail email address
+EMAIL = "your-email@yahoo.com"
 PASS = "zgvpnfymmwxebpof"
 EXPORT_FOLDERS = ["export1", "export2", "export3"]
 BATCH = 1000  # messages per MOVE call

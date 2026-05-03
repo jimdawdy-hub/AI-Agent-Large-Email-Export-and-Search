@@ -11,7 +11,8 @@ import time
 import requests
 from pathlib import Path
 
-BASE_DIR = Path("/home/jim/email-purge")
+# EDIT THIS: Set your base directory for the email purge project
+BASE_DIR = Path("~/email-purge").expanduser()
 DB_FILE = BASE_DIR / "vectors" / "email_index.db"
 KEEP_FILE = BASE_DIR / "filtered" / "keep.jsonl"
 REVIEW_FILE = BASE_DIR / "filtered" / "needs_review.jsonl"

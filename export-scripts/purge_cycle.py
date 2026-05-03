@@ -9,11 +9,13 @@ import imaplib, re, time, sys, os, json
 from pathlib import Path
 
 HOST = "imap.mail.yahoo.com"
-EMAIL = "kc7rcy@yahoo.com"
+# EDIT THIS: Your Yahoo Mail email address
+EMAIL = "your-email@yahoo.com"
 PASS = "zgvpnfymmwxebpof"
 EXPORT_FOLDERS = ["export1", "export2", "export3"]
 MOVE_BATCH = 8999  # Yahoo errors at 10000
-BASE_DIR = Path("/home/jim/email-purge")
+# EDIT THIS: Set your base directory for the email purge project
+BASE_DIR = Path("~/email-purge").expanduser()
 LOG_FILE = BASE_DIR / "logs" / "purge_cycle.log"
 
 def log(msg):

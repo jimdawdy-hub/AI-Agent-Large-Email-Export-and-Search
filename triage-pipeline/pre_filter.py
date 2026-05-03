@@ -10,7 +10,8 @@ import sys
 from pathlib import Path
 from datetime import datetime, timedelta
 
-BASE_DIR = Path("/home/jim/email-purge")
+# EDIT THIS: Set your base directory for the email purge project
+BASE_DIR = Path("~/email-purge").expanduser()
 META_FILE = BASE_DIR / "metadata" / "emails.jsonl"
 FILTERED_FILE = BASE_DIR / "filtered" / "pre_filter_results.jsonl"
 KEEP_FILE = BASE_DIR / "filtered" / "keep.jsonl"
@@ -19,32 +20,32 @@ REVIEW_FILE = BASE_DIR / "filtered" / "needs_review.jsonl"
 STATS_FILE = BASE_DIR / "filtered" / "stats.json"
 
 # --- VIP / Important Senders ---
-# Add email addresses or domains that should always be kept
+# EDIT THIS: Add email addresses or domains that should always be kept
+# Examples: employers, courts, important clients
 VIP_SENDERS = {
-    # Employers
-    "internationalsos.com", "fluor.com", "fugro.com", "proland.com", "promed.com",
+    # "your-employer.com",
+    # "important-client.com",
 }
 VIP_DOMAINS = {
-    # Courts
-    "courts.gov", "ilcourts.us", "in.gov",
-    # Common legal domains - expand as needed
-    # Employers
-    "internationalsos.com", "fluor.com", "fugro.com", "proland.com", "promed.com",
+    # "courts.gov",
+    # "your-employer.com",
 }
 VIP_PATTERNS = []  # Regex patterns for VIP senders
 
 # --- Search Terms (case-insensitive) ---
+# EDIT THIS: Add keywords specific to your needs
+# Examples: names, companies, locations, interests
 SEARCH_TERMS = [
-    # Universities
-    "university of new mexico", "new mexico state university", "nmsu", "unm",
-    # People
-    "denisa", "radu", "gulnara", "danik", "daniel", "arlan",
+    # Universities/Schools
+    # "university name", "college name",
+    # People (family, colleagues, etc.)
+    # "firstname", "lastname",
     # Companies/Orgs
-    "halliburton", "mohave",
-    # Countries
-    "romania", "kazakhstan", "russia", "afghanistan", "pakistan", "arizona",
+    # "company-name",
+    # Locations
+    # "country-name", "city-name",
     # Personal interests
-    "cristina", "ham radio", "rizzani", "sakhalin", "fast seduction",
+    # "hobby-name",
 ]
 
 # --- Deadline/Urgency Keywords ---

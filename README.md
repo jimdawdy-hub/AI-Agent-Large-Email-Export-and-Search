@@ -8,6 +8,61 @@ This project solves two hard problems:
 1. **Export**: Yahoo Mail IMAP has a 10,000 message limit. This repo contains working code to export 100K+ emails.
 2. **Triage**: Once exported, use local LLMs (Ollama) to vectorize and triage emails for importance.
 
+## Configuration
+
+Before running, edit these files to match your setup:
+
+### 1. Email Address and Paths
+
+In `export-scripts/purge_cycle.py` and `export-scripts/move_to_exports.py`:
+```python
+# EDIT THIS: Your Yahoo Mail email address
+EMAIL = "your-email@yahoo.com"
+
+# EDIT THIS: Set your base directory
+BASE_DIR = Path("~/email-purge").expanduser()
+```
+
+In all `triage-pipeline/*.py` files:
+```python
+# EDIT THIS: Set your base directory
+BASE_DIR = Path("~/email-purge").expanduser()
+```
+
+### 2. VIP Senders and Search Terms
+
+In `triage-pipeline/pre_filter.py`, edit these sections:
+
+```python
+# EDIT THIS: Add domains/addresses that should always be kept
+VIP_SENDERS = {
+    # "your-employer.com",
+    # "important-client.com",
+}
+VIP_DOMAINS = {
+    # "courts.gov",
+    # "your-employer.com",
+}
+
+# EDIT THIS: Add keywords specific to your needs
+SEARCH_TERMS = [
+    # Universities/Schools
+    # "university name",
+    # People (family, colleagues)
+    # "firstname", "lastname",
+    # Companies/Orgs
+    # "company-name",
+    # Locations
+    # "country-name", "city-name",
+]
+```
+
+### 3. Yahoo App Password
+
+Generate an app password at https://login.yahoo.com/account/security/app-passwords
+
+Use this password (not your regular password) in the scripts.
+
 ## Quick Start
 
 ### 1. Export from Yahoo Mail

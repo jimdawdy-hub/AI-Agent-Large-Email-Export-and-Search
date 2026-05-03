@@ -12,7 +12,8 @@ import re
 import requests
 from pathlib import Path
 
-BASE_DIR = Path("/home/jim/email-purge")
+# EDIT THIS: Set your base directory for the email purge project
+BASE_DIR = Path("~/email-purge").expanduser()
 DB_FILE = BASE_DIR / "vectors" / "email_index.db"
 TRIAGE_FILE = BASE_DIR / "filtered" / "triage_results.jsonl"
 ESCALATE_FILE = BASE_DIR / "filtered" / "escalate.jsonl"

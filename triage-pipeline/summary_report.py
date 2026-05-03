@@ -8,7 +8,8 @@ import sqlite3
 from pathlib import Path
 from datetime import datetime
 
-BASE_DIR = Path("/home/jim/email-purge")
+# EDIT THIS: Set your base directory for the email purge project
+BASE_DIR = Path("~/email-purge").expanduser()
 DB_FILE = BASE_DIR / "vectors" / "email_index.db"
 REPORT_FILE = BASE_DIR / "summary_report.md"
 

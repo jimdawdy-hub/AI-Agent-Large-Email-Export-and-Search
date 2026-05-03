@@ -142,7 +142,7 @@ Set up a cron job to run one cycle every 15 minutes:
 openclaw cron create \
   --name "email-purge-cycle" \
   --every 15m \
-  --message "Run: cd /home/jim/email-purge && python3 scripts/purge_cycle.py" \
+  --message "Run: cd ~/email-purge && python3 scripts/purge_cycle.py" \
   --session isolated \
   --model "moonshot/kimi-k2.5" \
   --no-deliver
@@ -168,7 +168,7 @@ Auth:     Plain password (app password for Yahoo Account Key)
 ### Folder Structure
 
 ```
-/home/jim/email-purge/
+~/email-purge/
 ├── eml/           # Downloaded .eml files
 │   ├── INBOX/
 │   ├── export1/
