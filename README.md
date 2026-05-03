@@ -225,3 +225,24 @@ This was built for a real 132,000-email migration. PRs welcome for:
 - **Export strategy**: Reverse-engineered from Yahoo IMAP behavior
 - **Embeddings**: Ollama + nomic-embed-text
 - **Triage**: qwen3:4b-instruct running locally on AMD RX 6600 XT
+
+---
+
+## ⚠️ Safety Notice
+
+This tool performs **destructive operations** on your email account:
+
+1. **MOVE operations**: Emails are moved from INBOX to temporary folders
+2. **DELETE operations**: Emails are deleted from temporary folders after download
+
+**Risk**: If the script fails between MOVE and download, emails may be lost.
+
+**Mitigation**:
+- Test on a small folder first
+- Use Yahoo's web interface export as backup
+- Monitor the process closely
+- Verify message counts match before/after each cycle
+
+**Recommendation**: Run manually first. Only use automated cron after thorough testing.
+
+The authors are not responsible for data loss. Use at your own risk.
