@@ -1,16 +1,17 @@
 # AI Agent Large Email Export and Search
 
-A complete pipeline for exporting large email archives (100K+ messages) from Yahoo Mail and performing AI-powered triage using local LLMs.
-Utilizes an AI agent such as Openclaw or Hermes to manage the process of downloading massive (100k+) email storage, sorting them emails,
-and delivering a curated list of high value emails for later archiving.
+A complete pipeline for exporting large email archives from Yahoo Mail and performing AI-powered triage using local LLMs.
+The workflow was built around an AI agent such as OpenClaw or Hermes to manage large mailbox downloads, sort the mail, and deliver a curated
+list of high-value messages for later archiving.
 
-This method uses a cheap GPU and Ollama local model to do the AI-review without burning expensive cloud tokens.  Should work similarly for
-Gmail and other clouod email systems.
+The pipeline uses a local GPU and Ollama-based models for triage instead of burning cloud tokens. The same architecture can be adapted to
+other IMAP-backed email systems, but the Yahoo-specific limits and retry behavior documented here are the ones that were actually exercised.
 
 ## Overview
 
 This project solves two hard problems:
-1. **Export**: Yahoo Mail IMAP has a 10,000 message limit. This repo contains working code to export 100K+ emails.
+1. **Export**: Yahoo Mail IMAP has a practical 10,000-message folder limit. This repo contains the working rotation workflow used to export a
+   132K-mailbox without losing local `.eml` copies.
 2. **Triage**: Once exported, use local LLMs (Ollama) to vectorize and triage emails for importance.
 
 ## Configuration
@@ -218,6 +219,16 @@ This was built for a real 132,000-email migration. PRs welcome for:
 - Parallel downloads
 - Resume capability
 - Support for Gmail/Outlook
+- Better handling for completion-state watchdogs
+
+## ClawHub Skill
+
+The repo now includes a ClawHub-ready skill bundle:
+
+- `yahoomail-export-skill/SKILL.md`
+- `yahoomail-export-skill/agents/openai.yaml`
+
+That bundle reflects the final working workflow and the practical Yahoo IMAP limits observed during the migration.
 - Better embedding models
 
 ## Credits

@@ -1,0 +1,7 @@
+interface:
+  display_name: "Yahoo Mail Export"
+  short_description: "Export large Yahoo Mail archives safely"
+  default_prompt: "Use $yahoomail-export to drain a large Yahoo inbox with the folder-rotation IMAP workflow and safe delete-after-verify handling."
+
+policy:
+  allow_implicit_invocation: true
