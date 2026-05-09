@@ -4,6 +4,8 @@ A complete pipeline for exporting large email archives from Yahoo Mail and perfo
 The workflow was built around an AI agent such as OpenClaw or Hermes to manage large mailbox downloads, sort the mail, and deliver a curated
 list of high-value messages for later archiving.
 
+NOTE: Current version does not include SENT mails.
+
 The pipeline uses a local GPU and Ollama-based models for triage instead of burning cloud tokens. The same architecture can be adapted to
 other IMAP-backed email systems, but the Yahoo-specific limits and retry behavior documented here are the ones that were actually exercised.
 
