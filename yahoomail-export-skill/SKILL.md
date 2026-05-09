@@ -55,6 +55,9 @@ Use a script that:
 
 - `export-scripts/purge_cycle.py` - main safe rotation cycle
 - `export-scripts/move_to_exports.py` - move-only helper for testing
+- `export-scripts/download_sent.py` - read-only/resumable Sent-folder downloader
+- `triage-pipeline/email_indexer.py` - canonical SQLite + FTS5 indexer for local `.eml` archives
+- `triage-pipeline/triage_viewer.py` - local-only browser viewer and FTS search API
 - `triage-pipeline/build_embeddings.py` - embedding generation
 - `triage-pipeline/pre_filter.py` - rule-based filtering
 - `triage-pipeline/triage_emails.py` - LLM triage
@@ -79,4 +82,3 @@ For a new mailbox migration, adapt the constants in the scripts first:
 - cooldown intervals
 
 Then test on a tiny folder before touching the real inbox.
-

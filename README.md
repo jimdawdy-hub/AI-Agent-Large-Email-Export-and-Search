@@ -4,8 +4,6 @@ A complete pipeline for exporting large email archives from Yahoo Mail and perfo
 The workflow was built around an AI agent such as OpenClaw or Hermes to manage large mailbox downloads, sort the mail, and deliver a curated
 list of high-value messages for later archiving.
 
-NOTE: Current version does not include SENT mails.
-
 The pipeline uses a local GPU and Ollama-based models for triage instead of burning cloud tokens. The same architecture can be adapted to
 other IMAP-backed email systems, but the Yahoo-specific limits and retry behavior documented here are the ones that were actually exercised.
 
@@ -14,7 +12,8 @@ other IMAP-backed email systems, but the Yahoo-specific limits and retry behavio
 This project solves two hard problems:
 1. **Export**: Yahoo Mail IMAP has a practical 10,000-message folder limit. This repo contains the working rotation workflow used to export a
    132K-mailbox without losing local `.eml` copies.
-2. **Triage**: Once exported, use local LLMs (Ollama) to vectorize and triage emails for importance.
+2. **Search and triage**: Once exported, index the local `.eml` archive with SQLite FTS5, review it in a local browser UI, and optionally use
+   local LLMs (Ollama) for embeddings and triage.
 
 ## Configuration
 
@@ -32,9 +31,13 @@ BASE_DIR = Path("~/email-purge").expanduser()
 ```
 
 In all `triage-pipeline/*.py` files:
-```python
-# EDIT THIS: Set your base directory
-BASE_DIR = Path("~/email-purge").expanduser()
+```bash
+# Optional: defaults to ~/email-purge
+EMAIL_PURGE_DIR=~/email-purge
+EMAIL_INDEX_DB=~/email-purge/email_index.db
+EMAIL_EML_ROOT=~/email-purge/eml
+EMAIL_KEEP_JSONL=~/email-purge/triage/keep.jsonl
+EMAIL_DEFER_JSONL=~/email-purge/triage/defer.jsonl
 ```
 
 ### 2. VIP Senders and Search Terms
@@ -84,7 +87,36 @@ This moves emails in batches to temporary folders, downloads them, and clears th
 
 See [docs/YAHOO_EXPORT_GUIDE.md](docs/YAHOO_EXPORT_GUIDE.md) for detailed instructions.
 
-### 2. Pre-filter (Rule-based)
+To download Sent mail without the INBOX rotation/delete workflow:
+
+```bash
+cd export-scripts
+YAHOO_EMAIL=your-email@yahoo.com YAHOO_PASSWORD=your-app-password python3 download_sent.py --folder Sent
+```
+
+`download_sent.py` is resumable and read-only by default: it selects the remote folder read-only, skips existing local `.eml` files, and writes
+metadata to `metadata/download_sent_state.json`.
+
+### 2. Build the SQLite/FTS search index
+
+```bash
+cd triage-pipeline
+python3 email_indexer.py --rebuild
+```
+
+This creates `~/email-purge/email_index.db` with one canonical row per `.eml` file and an FTS5 index over subject, sender, recipients, and
+clean message body text.
+
+### 3. Browse and search locally
+
+```bash
+python3 triage_viewer.py
+```
+
+Open http://127.0.0.1:8765/ and use the search box across all mail, keep/defer piles, or specific folders. The viewer serves original `.eml`
+files and attachments from disk; it does not expose the server beyond localhost.
+
+### 4. Pre-filter (Rule-based)
 
 ```bash
 cd triage-pipeline
@@ -99,7 +131,7 @@ Applies rule-based filtering:
 
 Outputs: `keep.jsonl`, `drop.jsonl`, `needs_review.jsonl`
 
-### 3. Build Vector Index
+### 5. Build Vector Index
 
 ```bash
 python3 build_embeddings.py
@@ -107,7 +139,7 @@ python3 build_embeddings.py
 
 Creates embeddings using Ollama's `nomic-embed-text` model and stores in SQLite with sqlite-vec.
 
-### 4. LLM Triage
+### 6. LLM Triage
 
 ```bash
 python3 triage_emails.py
@@ -115,7 +147,7 @@ python3 triage_emails.py
 
 Uses local LLM (qwen3:4b-instruct) to score emails for importance (0-100) and categorize them.
 
-### 5. Generate Report
+### 7. Generate Report
 
 ```bash
 python3 summary_report.py
@@ -132,6 +164,12 @@ Creates human-readable summary of triage results.
 └─────────────┘     └──────────────┘     └─────────────────┘
                                                     │
                            ┌────────────────────────┘
+                           ▼
+                  ┌─────────────────┐
+                  │ SQLite + FTS5    │
+                  │ Search Viewer    │
+                  └─────────────────┘
+                           │
                            ▼
                   ┌─────────────────┐
                   │  Pre-filter     │
@@ -167,6 +205,8 @@ Creates human-readable summary of triage results.
 ## Requirements
 
 - Python 3.10+
+- Python packages:
+  - `beautifulsoup4` for HTML-to-text extraction in the search indexer
 - Ollama with models:
   - `nomic-embed-text` (for embeddings)
   - `qwen3:4b-instruct-2507-q4_K_M` (for triage)
@@ -205,6 +245,7 @@ m._simple_command('MOVE', '1:1000', 'export1')
 | Phase | Rate | 100K Emails |
 |-------|------|-------------|
 | Export | 1K msgs / 25 sec | ~40 min (move) + ~30 hours (download) |
+| SQLite/FTS index | 100s msgs / sec | minutes |
 | Pre-filter | 1000 msgs / sec | ~2 min |
 | Embeddings | 50 msgs / min | ~30 hours |
 | Triage | 1 msg / 2 sec | ~50 hours |
@@ -222,6 +263,7 @@ This was built for a real 132,000-email migration. PRs welcome for:
 - Resume capability
 - Support for Gmail/Outlook
 - Better handling for completion-state watchdogs
+- Better embedding models
 
 ## ClawHub Skill
 
@@ -231,7 +273,6 @@ The repo now includes a ClawHub-ready skill bundle:
 - `yahoomail-export-skill/agents/openai.yaml`
 
 That bundle reflects the final working workflow and the practical Yahoo IMAP limits observed during the migration.
-- Better embedding models
 
 ## Credits
 
